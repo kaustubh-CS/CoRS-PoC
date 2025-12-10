@@ -51,7 +51,11 @@ export default function ActivityPage({ activity }: { activity: Activity }) {
                   onClick={() => setActiveImage(img.url)}
                   className={`w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden border-2 ${activeImage === img.url ? 'border-blue-600' : 'border-transparent'}`}
                 >
-                  <img src={img.url} className="w-full h-full object-cover" />
+                  <img 
+                    src={img.url} 
+                    alt="Activity gallery image" 
+                    className="w-full h-full object-cover" 
+                    />
                 </button>
               ))}
             </div>

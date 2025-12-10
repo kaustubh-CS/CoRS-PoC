@@ -39,7 +39,7 @@ export default function Home({ homeData }: { homeData: Homepage }) {
 
       {/* --- VIBE MATCHER (Interactive Use Case) --- */}
       <div className="max-w-4xl mx-auto -mt-10 relative z-20 bg-white shadow-xl rounded-xl p-8">
-        <h2 className="text-2xl font-bold text-center mb-6">What's your vibe this weekend?</h2>
+        <h2 className="text-2xl font-bold text-center mb-6">What&apos;s your vibe this weekend?</h2>
         <div className="flex justify-center gap-4">
           {["Adventure", "Relaxation", "Luxury"].map((vibe) => (
             <button
