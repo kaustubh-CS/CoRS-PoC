@@ -30,7 +30,8 @@ let customHostBaseUrl = envConfig.CONTENTSTACK_API_HOST as string;
 customHostBaseUrl = customHostBaseUrl? customHostUrl(customHostBaseUrl): '';
 
 // SDK initialization
-const Stack = initializeContentStackSdk();
+// FIX: Added 'export' so other files can use this connection
+export const Stack = initializeContentStackSdk();
 
 // set host url only for custom host or non prod base url's
 if (!!customHostBaseUrl && isValidCustomHostUrl(customHostBaseUrl)) {

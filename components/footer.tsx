@@ -1,124 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import parse from 'html-react-parser';
-import { onEntryChange } from '../contentstack-sdk';
-import { getFooterRes } from '../helper';
-import Skeleton from 'react-loading-skeleton';
-import { FooterProps, Entry, Links } from "../typescript/layout";
-
-export default function Footer({ footer, entries }: {footer: FooterProps, entries: Entry}) {
-
-  const [getFooter, setFooter] = useState(footer);
-  
-  function buildNavigation(ent: Entry, ft: FooterProps) {
-    let newFooter = { ...ft };
-    if (ent.length !== newFooter.navigation.link.length) {
-      ent.forEach((entry) => {
-        const fFound = newFooter?.navigation.link.find(
-          (nlink: Links) => nlink.title === entry.title
-        );
-        if (!fFound) {
-          newFooter.navigation.link?.push({
-            title: entry.title,
-            href: entry.url,
-            $: entry.$,
-          });
-        }
-      });
-    }
-    return newFooter;
-  }
-
-  async function fetchData() {
-    try {
-      if (footer && entries) {
-        const footerRes = await getFooterRes();
-        const newfooter = buildNavigation(entries, footerRes);
-        setFooter(newfooter);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  useEffect(() => {
-    onEntryChange(() => fetchData());
-  }, [footer]);
-
-  const footerData = getFooter ? getFooter : undefined;
-
+export default function Footer() {
   return (
-    <footer>
-      <div className='max-width footer-div'>
-        <div className='col-quarter'>
-          {footerData && footerData.logo ? (
-            (<Link href='/' className='logo-tag'>
-
-              <img
-                src={footerData.logo.url}
-                alt={footerData.title}
-                title={footerData.title}
-                {...footer.logo.$?.url as {}}
-                className='logo footer-logo'
-              />
-
-            </Link>)
-          ) : (
-            <Skeleton width={150} />
-          )}
+    <footer className="bg-gray-900 text-white py-12 mt-20">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 className="text-xl font-bold mb-4">Roam&Rush</h3>
+          <p className="text-gray-400 text-sm">
+            Curated adventures for the modern traveler. Find your vibe, book your thrill.
+          </p>
         </div>
-        <div className='col-half'>
-          <nav>
-            <ul className='nav-ul'>
-              {footerData ? (
-                footerData.navigation.link.map((menu) => (
-                  <li
-                    className='footer-nav-li'
-                    key={menu.title}
-                    {...menu.$?.title}
-                  >
-                    <Link href={menu.href} legacyBehavior>{menu.title}</Link>
-                  </li>
-                ))
-              ) : (
-                <Skeleton width={300} />
-              )}
-            </ul>
-          </nav>
+        <div>
+          <h4 className="font-bold mb-4">Destinations</h4>
+          <ul className="space-y-2 text-gray-400 text-sm">
+            <li>Manali</li>
+            <li>Goa</li>
+            <li>Rishikesh</li>
+            <li>Ladakh</li>
+          </ul>
         </div>
-        <div className='col-quarter social-link'>
-          <div className='social-nav'>
-            {footerData ? (
-              footerData.social?.social_share.map((social) => (
-                <a
-                  href={social.link.href}
-                  title={social.link.title}
-                  key={social.link.title}
-                >
-                  {social.icon && (
-                    <img
-                      src={social.icon.url}
-                      alt={social.link.title}
-                      {...social.icon.$?.url as {}}
-                    />
-                  )}
-                </a>
-              ))
-            ) : (
-              <Skeleton width={200} />
-            )}
-          </div>
+        <div>
+          <h4 className="font-bold mb-4">Support</h4>
+          <ul className="space-y-2 text-gray-400 text-sm">
+            <li>Contact Us</li>
+            <li>Privacy Policy</li>
+            <li>Terms of Service</li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="font-bold mb-4">Newsletter</h4>
+          <input 
+            type="email" 
+            placeholder="Enter your email" 
+            className="w-full px-4 py-2 rounded bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-blue-500"
+          />
         </div>
       </div>
-      {footerData && typeof footerData.copyright === 'string' ? (
-        <div className='copyright' {...footer.$?.copyright as {}}>
-          {parse(footerData.copyright)}
-        </div>
-      ) : (
-        <div className='copyright'>
-          <Skeleton width={500} />
-        </div>
-      )}
+      <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-gray-800 text-center text-gray-500 text-xs">
+        © 2025 Roam & Rush. All rights reserved.
+      </div>
     </footer>
   );
 }
