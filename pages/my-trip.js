@@ -10,7 +10,8 @@ export default function MyTrip() {
       <h1>My Saved Trip Plan</h1>
       
       {savedTrips.length === 0 ? (
-        <p>You haven't saved anything yet. Go explore!</p>
+        // FIX IS HERE: Changed "haven't" to "haven&apos;t"
+        <p>You haven&apos;t saved anything yet. Go explore!</p>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
           {savedTrips.map((trip) => (
