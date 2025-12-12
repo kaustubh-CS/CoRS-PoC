@@ -5,6 +5,7 @@ import Head from "next/head";
 import { useState } from "react";
 import SaveButton from '../../components/SaveButton';
 import { useItineraryEditor } from '../../hooks/useItineraryEditor';
+import DOMPurify from "isomorphic-dompurify";
 
 export default function ActivityPage({ activity }: { activity: Activity }) {
   // Simple state to handle the Gallery Image swap
@@ -82,7 +83,7 @@ export default function ActivityPage({ activity }: { activity: Activity }) {
              <h2 className="text-2xl font-bold mb-4">About this Experience</h2>
              <div className="prose max-w-none text-gray-600">
                {typeof activity.description === 'string' ? (
-                 <div dangerouslySetInnerHTML={{ __html: activity.description }} />
+                 <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(activity.description) }} />
                ) : (
                  "Description content available."
                )}
@@ -182,9 +183,9 @@ export default function ActivityPage({ activity }: { activity: Activity }) {
                       ) : (
                         <div className="text-gray-600 mt-1 prose prose-blue max-w-none">
                            {typeof dayData.description === 'string' ? (
-                              <div dangerouslySetInnerHTML={{ __html: dayData.description }} />
+                              <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(dayData.description) }} />
                            ) : (
-                              "Check details."
+                              "Check itinerary details."
                            )}
                         </div>
                       )}
