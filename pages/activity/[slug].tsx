@@ -3,6 +3,7 @@ import { Stack } from "../../contentstack-sdk";
 import { Activity } from "../../typescript/types/contentstack";
 import Head from "next/head";
 import { useState } from "react";
+import SaveButton from '../../components/SaveButton';
 
 export default function ActivityPage({ activity }: { activity: Activity }) {
   // Simple state to handle the Gallery Image swap
@@ -64,15 +65,17 @@ export default function ActivityPage({ activity }: { activity: Activity }) {
           {/* Description */}
           <div>
              <h2 className="text-2xl font-bold mb-4">About this Experience</h2>
-             {/* Note: If you used JSON RTE, you need a parser here. 
-                 For weekend speed, we assume simple text or render raw if needed. */}
              <div className="prose max-w-none text-gray-600">
-               {/* Simple render check */}
-               {typeof activity.description === 'string' ? activity.description : "Description content available."}
+               {/* FIX 1: Render HTML Description */}
+               {typeof activity.description === 'string' ? (
+                 <div dangerouslySetInnerHTML={{ __html: activity.description }} />
+               ) : (
+                 "Description content available."
+               )}
              </div>
           </div>
 
-          {/* --- ITINERARY (The Complex Part) --- */}
+          {/* --- ITINERARY --- */}
           {activity.itinerary && (
             <div className="bg-gray-50 p-8 rounded-xl border border-gray-100">
               <h2 className="text-2xl font-bold mb-6">Itinerary</h2>
@@ -94,11 +97,14 @@ export default function ActivityPage({ activity }: { activity: Activity }) {
                       </div>
                       <div className="pb-6">
                         <h4 className="font-bold text-lg">Day {dayData.day_number}</h4>
-                        <div className="text-gray-600 mt-1">
-                             {/* Handle JSON RTE safely */}
-                             {typeof dayData.description === 'string' 
-                                ? dayData.description 
-                                : "Check itinerary details."}
+                        
+                        {/* FIX 2: Render HTML Itinerary + Added 'prose' class for styling bullets/bold */}
+                        <div className="text-gray-600 mt-1 prose prose-blue max-w-none">
+                             {typeof dayData.description === 'string' ? (
+                                <div dangerouslySetInnerHTML={{ __html: dayData.description }} />
+                             ) : (
+                                "Check itinerary details."
+                             )}
                         </div>
                       </div>
                     </div>
@@ -131,6 +137,9 @@ export default function ActivityPage({ activity }: { activity: Activity }) {
              <button className="w-full py-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">
                Check Availability
              </button>
+
+             <SaveButton data={activity} />
+                
              <p className="text-xs text-center text-gray-400 mt-4">Instant Confirmation</p>
           </div>
         </div>
@@ -147,7 +156,7 @@ export const getServerSideProps = async ({ params }: any) => {
   // Fetch Activity where URL matches the slug
   const result = await Stack.ContentType("activity")
     .Query()
-    .where("url", `/activity/${slug}`) // Ensure your CMS entries have URLs like "/activity/river-rafting" or just "/river-rafting" depending on setup
+    .where("url", `/activity/${slug}`) 
     .includeReference(["destination"])
     .toJSON()
     .find();

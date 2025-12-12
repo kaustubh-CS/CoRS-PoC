@@ -38,7 +38,7 @@ export default function Home({ homeData }: { homeData: Homepage }) {
       </div>
 
       {/* --- VIBE MATCHER (Interactive Use Case) --- */}
-      <div className="max-w-4xl mx-auto -mt-10 relative z-20 bg-white shadow-xl rounded-xl p-8">
+      <div className="max-w-4xl mx-auto -mt-10 relative z-20 bg-white shadow-xl rounded-xl p-8 mb-20">
         <h2 className="text-2xl font-bold text-center mb-6">What&apos;s your vibe this weekend?</h2>
         <div className="flex justify-center gap-4">
           {["Adventure", "Relaxation", "Luxury"].map((vibe) => (
@@ -97,23 +97,8 @@ export default function Home({ homeData }: { homeData: Homepage }) {
         )}
       </div>
 
-      {/* --- TRENDING SECTION (From CMS) --- */}
-      <div className="max-w-6xl mx-auto py-20 px-4">
-        <h2 className="text-3xl font-bold mb-8">Trending Now</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {homeData.trending_activities?.map((activity) => (
-            <Link 
-              key={activity.uid} 
-              href={activity.url || '#'} 
-              className="block group" // 'block' makes the link behave like a div
-            >
-                <div className="bg-white rounded-xl shadow-md overflow-hidden transition group-hover:shadow-xl">
-                  {/* ... existing image and text code ... */}
-                </div>
-            </Link>
-          ))}
-        </div>
-      </div>
+      {/* TRENDING SECTION REMOVED HERE */}
+
     </div>
   );
 }
@@ -122,13 +107,15 @@ export default function Home({ homeData }: { homeData: Homepage }) {
 export const getServerSideProps = async () => {
   const result = await Stack.ContentType("homepage")
     .Query()
-    .includeReference(["trending_activities", "featured_destinations"]) // Fetch linked data
+    // You can remove "trending_activities" from here too since you aren't using it anymore
+    // but leaving it doesn't break anything.
+    .includeReference(["trending_activities", "featured_destinations"]) 
     .toJSON()
     .find();
 
   return {
     props: {
-      homeData: result[0][0], // Pass the first entry found
+      homeData: result[0][0], 
     },
   };
 };
